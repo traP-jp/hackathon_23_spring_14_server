@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_USER: root
+      DB_PASSWORD: password
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: userdata
+      GORM_DEBUG: 1
+    ports:
+      - "3000:3000"
+    entrypoint: dockerize -timeout 60s -wait tcp://mysql:3306
+    command: /github.com/traP-jp/hackathon_23_spring_14_server/app
+    depends_on:
+      - mysql
+    networks:
+      - dev
+
+  mysql:
+    container_name: hackathon-db
+    image: "mariadb:10.11"
+    restart: always
+    environment:
+       MYSQL_ROOT_PASSWORD: password
+       MYSQL_DATABASE: userdata
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    volumes:
+      - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
+      - "./mysql.cnf:/etc/mysql/conf.d/mysql.cnf"
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    networks:
+      - dev
+networks:
+  dev:
+    name: dev
