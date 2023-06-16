@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+	mid "github.com/labstack/echo/v4/middleware"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -67,6 +68,7 @@ func Setup() error {
 func main() {
 	fmt.Println("Hello World")
 	e := echo.New()
+	e.Use(mid.Logger())
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello World")
 	})
