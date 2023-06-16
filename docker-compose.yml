@@ -14,7 +14,9 @@ services:
     ports:
       - "3000:3000"
     entrypoint: dockerize -timeout 60s -wait tcp://mysql:3306
-    command: /github.com/traP-jp/hackathon_23_spring_14_server/app
+    command: air -c .air.toml
+    volumes:
+      - "./:/github.com/traP-jp/hackathon_23_spring_14_server/"
     depends_on:
       - mysql
     networks:
@@ -25,8 +27,8 @@ services:
     image: "mariadb:10.11"
     restart: always
     environment:
-       MYSQL_ROOT_PASSWORD: password
-       MYSQL_DATABASE: userdata
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: userdata
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
     volumes:
       - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
