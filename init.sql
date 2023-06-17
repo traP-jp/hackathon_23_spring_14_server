@@ -3,8 +3,8 @@ DROP TABLE IF EXISTS `time_cards`;
 DROP TABLE IF EXISTS `items`;
 
 CREATE TABLE `users` (
-  `uuid` varchar(32),
-  `id` varchar(32),
+  `uuid` char(36) NOT NULL,
+  `id` varchar(32) NOT NULL,
   `point` int DEFAULT NULL,
   `date` date NOT NULL,
   PRIMARY KEY (`uuid`,`date`)
@@ -29,7 +29,7 @@ CREATE TABLE `items` (
 LOCK TABLES `users` WRITE;
 INSERT INTO `users` (`uuid`,`id`, `point`, `date`)
 VALUES
-  (`fwafewa`,'trap',2,"2023-06-17");
+  ("33a123f4-067b-4ec5-9060-4d03da4c4aca",'trap',2,"2023-06-17");
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 

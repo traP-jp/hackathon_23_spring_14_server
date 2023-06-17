@@ -16,10 +16,10 @@ type (
 )
 
 func GetUsers(c echo.Context) error {
-	users, err := model.GetUsers()
+	rawUsers, err := model.GetUsers()
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, users)
+	return c.JSON(http.StatusOK, rawUsers)
 }
