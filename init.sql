@@ -3,10 +3,11 @@ DROP TABLE IF EXISTS `time_cards`;
 DROP TABLE IF EXISTS `items`;
 
 CREATE TABLE `users` (
+  `uuid` varchar(32),
   `id` varchar(32),
   `point` int DEFAULT NULL,
   `date` date NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`uuid`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `time_cards` (
@@ -26,9 +27,9 @@ CREATE TABLE `items` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 LOCK TABLES `users` WRITE;
-INSERT INTO `users` (`id`, `point`, `date`)
+INSERT INTO `users` (`uuid`,`id`, `point`, `date`)
 VALUES
-  ('trap',2,"2023-06-17");
+  (`fwafewa`,'trap',2,"2023-06-17");
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
