@@ -23,3 +23,11 @@ func GetUsers(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, rawUsers)
 }
+func GetMe(c echo.Context) error {
+	rawUsers, err := model.GetMe()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, rawUsers)
+}

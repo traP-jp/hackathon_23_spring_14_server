@@ -31,6 +31,7 @@ func main() {
 		apiUser := api.Group("/user")
 		{
 			apiUser.GET("", handler.GetUsers)
+			apiUser.GET("/me", handler.GetMe)
 		}
 		apiItem := api.Group("/item")
 		{

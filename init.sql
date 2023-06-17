@@ -26,10 +26,10 @@ DROP TABLE IF EXISTS `time_cards`;
 
 
 CREATE TABLE `time_cards` (
-  `id` varchar(32),
-  `date` date,
-  `item_id` varchar(86) NOT NULL,
-  PRIMARY KEY (`id`,`date`)
+  `id`char(36) NOT NULL,
+  `date` date NOT NULL,
+  `item_id` char(36) NOT NULL,
+  PRIMARY KEY (`id`,`date`,`item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 LOCK TABLES `users` WRITE;
@@ -42,14 +42,14 @@ UNLOCK TABLES;
 LOCK TABLES `items` WRITE;
 INSERT INTO `items` (`uuid`,`id`,`point`,`report`)
 VALUES
-  ("33a123f4-067b-4ec5-9060-4d03da4c4aca",'Get',3,5);
+  ("33a123f4-067b-4ec5-9060-4d03da4c4aca",'Get',2,5);
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
 UNLOCK TABLES;
 
 LOCK TABLES `time_cards` WRITE;
 INSERT INTO `time_cards` (`id`, `date`, `item_id`)
 VALUES
-  ('traP', '2023-06-17','Get');
+  ('33a123f4-067b-4ec5-9060-4d03da4c4aca', '2023-06-17','33a123f4-067b-4ec5-9060-4d03da4c4aca');
 /*!40000 ALTER TABLE `time_cards` DISABLE KEYS */;
 UNLOCK TABLES;
 

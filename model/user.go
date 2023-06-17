@@ -14,9 +14,9 @@ type User struct {
 }
 
 type TimeCards struct {
-	ID     string    `json:"id" gorm:"size:32;primary_key"`
+	ID     uuid.UUID `json:"uuid" gorm:"primary_key;type:char(36)"`
 	Date   time.Time `json:"date" gorm:"primary_key"`
-	ItemID string    `json:"itemID" gorm:"size:86"`
+	ItemID uuid.UUID `json:"uuid" gorm:"primary_key;type:char(36)"`
 }
 
 type DataSet struct {
@@ -24,10 +24,22 @@ type DataSet struct {
 	Date  time.Time `json:"date"`
 }
 
+type DataSetDetail struct {
+	Score    int       `json:"score"`
+	Date     time.Time `json:"date"`
+	ItemList []*Item   `json:"itemList"`
+}
+
 type PublicUser struct {
 	UUID    uuid.UUID  `json:"uuid"`
 	ID      string     `json:"id"`
 	DataSet []*DataSet `json:"dataset"`
+}
+
+type UserDetail struct {
+	UUID    uuid.UUID        `json:"uuid"`
+	ID      string           `json:"id"`
+	DataSet []*DataSetDetail `json:"dataset"`
 }
 type ID struct {
 	UUID uuid.UUID `json:"uuid"`
@@ -54,6 +66,54 @@ func GetUsers() ([]*PublicUser, error) {
 			UUID:    id.UUID,
 			ID:      id.ID,
 			DataSet: data,
+		})
+	}
+
+	return users, tx.Commit().Error
+}
+
+func GetMe() ([]*UserDetail, error) {
+	ids := []*ID{}
+	users := []*UserDetail{}
+
+	tx := db.Begin()
+	if err := db.Raw("SELECT `uuid`,`id` FROM `users` GROUP BY `uuid`").Scan(&ids).Error; err != nil {
+
+		return nil, err
+	}
+
+	for _, id := range ids {
+		data := []*DataSet{}
+		dataDetail := []*DataSetDetail{}
+		if err := db.Raw("SELECT point,date FROM `users` WHERE uuid = ? GROUP BY `uuid`", id.UUID).Scan(&data).Error; err != nil {
+
+			return nil, err
+		}
+		for _, d := range data {
+			timeCards := []*TimeCards{}
+			itemList := []*Item{}
+			if err := db.Raw("SELECT * FROM `time_cards` WHERE id = ? AND date = ?", id.UUID, d.Date).Scan(&timeCards).Error; err != nil {
+
+				return nil, err
+			}
+			for _, t := range timeCards {
+				item := &Item{}
+				if err := db.Raw("SELECT * FROM `items` WHERE uuid = ?", t.ItemID).Scan(&item).Error; err != nil {
+
+					return nil, err
+				}
+				itemList = append(itemList, item)
+			}
+			dataDetail = append(dataDetail, &DataSetDetail{
+				Score:    d.Point,
+				Date:     d.Date,
+				ItemList: itemList,
+			})
+		}
+		users = append(users, &UserDetail{
+			UUID:    id.UUID,
+			ID:      id.ID,
+			DataSet: dataDetail,
 		})
 	}
 
