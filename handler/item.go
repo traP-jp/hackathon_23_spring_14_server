@@ -59,3 +59,12 @@ func AddItems(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, returnItem)
 }
+
+func ReportItem(c echo.Context) error {
+	id := c.QueryParam("item")
+	item, err := model.ReportItem(id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, item)
+}

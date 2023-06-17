@@ -66,3 +66,15 @@ func AddItems(rawitem PublicItem) (*Item, error) {
 	}
 	return &item, nil
 }
+
+func ReportItem(id string) (*Item, error) {
+	item := Item{}
+	if err := db.Exec("SELECT * FROM `items` WHERE id = ?", id).Scan(&item).Error; err != nil {
+		return nil, err
+	}
+	item.Report += 1
+	if err := db.Exec("UPDATE `items` SET report = ? WHERE uuid = ?", item.Report, item.UUID).Error; err != nil {
+		return nil, err
+	}
+	return &item, nil
+}
