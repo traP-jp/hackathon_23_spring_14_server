@@ -19,8 +19,6 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello World!")
 	})
-	e.GET("/api/item", handler.GetItems)
-	e.POST("/api/item", handler.AddItems)
 	api := e.Group("/api")
 	{
 
@@ -33,6 +31,11 @@ func main() {
 		apiUser := api.Group("/user")
 		{
 			apiUser.GET("", handler.GetUsers)
+		}
+		apiItem := api.Group("/item")
+		{
+			apiItem.GET("", handler.GetItems)
+			apiItem.POST("", handler.AddItems)
 		}
 	}
 

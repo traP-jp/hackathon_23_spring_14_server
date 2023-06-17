@@ -35,17 +35,18 @@ type ID struct {
 }
 
 func GetUsers() ([]*PublicUser, error) {
-	var ids []*ID
-	var users []*PublicUser
+	ids := []*ID{}
+	users := []*PublicUser{}
+
 	tx := db.Begin()
-	if err := db.Model(&User{}).Select("uuid, id").Group("uuid").Find(&ids).Error; err != nil {
+	if err := db.Model(&User{}).Select("uuid", "id").Group("uuid").Find(&ids).Error; err != nil {
 		tx.Rollback()
 		return nil, err
 	}
 
 	for _, id := range ids {
-		var data []*DataSet
-		if err := db.Model(&User{}).Select("point, date").Where("uuid = ?", id.UUID).Find(&data).Error; err != nil {
+		data := []*DataSet{}
+		if err := db.Model(&User{}).Select("point", "date").Where("uuid = ?", id.UUID).Find(&data).Error; err != nil {
 			tx.Rollback()
 			return nil, err
 		}

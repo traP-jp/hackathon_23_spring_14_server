@@ -4,22 +4,23 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gofrs/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/traP-jp/hackathon_23_spring_14_server/model"
 )
 
 func GetItems(c echo.Context) error {
 	includeSuspended := c.QueryParam("include-suspended")
-	var include bool
-	if includeSuspended == "true" {
-		include = true
-	} else {
-		include = false
-	}
-	var items []model.Items
-	items = model.GetItems(include)
 
-	return c.JSON(http.StatusOK, items)
+	rawitems, err := model.GetItems()
+	if includeSuspended == "false" {
+		rawitems, err = model.GetActiveItems()
+	}
+	if err != nil {
+
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, rawitems)
 }
 
 func AddItems(c echo.Context) error {
@@ -37,14 +38,24 @@ func AddItems(c echo.Context) error {
 	case "terrible":
 		point = -2
 	}
-	item := model.Items{
+	if item, err := model.EnsureExisistenceID(id); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	} else if len(item) != 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, "item already exists")
+	} else {
+		fmt.Println(item)
+	}
+	item := model.PublicItem{
+		UUID:        uuid.Nil,
 		ID:          id,
 		Description: description,
 		Point:       point,
 		Report:      0,
 	}
-	fmt.Println(item)
-	model.AddItems(item)
+	returnItem, err := model.AddItems(item)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
 
-	return c.JSON(http.StatusOK, item)
+	return c.JSON(http.StatusOK, returnItem)
 }

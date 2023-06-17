@@ -15,7 +15,7 @@ var (
 
 	schemas = []interface{}{
 		&User{},
-		&Items{},
+		&Item{},
 		&TimeCards{},
 	}
 )
@@ -43,10 +43,10 @@ func Setup() error {
 
 	dbname := os.Getenv("DB_DATABASE")
 	if dbname == "" {
-		dbname = "portal"
+		dbname = "userdata"
 	}
 
-	db, err = gorm.Open(mysql.Open(fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, port, dbname)), &gorm.Config{})
+	db, err = gorm.Open(mysql.Open(fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, port, dbname)), &gorm.Config{PrepareStmt: false})
 	if err != nil {
 		return fmt.Errorf("failed to connect database: %v", err)
 	}
@@ -54,8 +54,7 @@ func Setup() error {
 	db = db.
 		Set("gorm:save_associations", false).
 		Set("gorm:association_save_reference", false).
-		Set("gorm:table_options", "CHARSET=utf8mb4").
-		Set("gorm:table_options", "ENGINE=InnoDB")
+		Set("gorm:table_options", "CHARSET=utf8mb4")
 	sqlDB, err := db.DB()
 	sqlDB.SetMaxIdleConns(2)
 	sqlDB.SetMaxOpenConns(16)
@@ -66,11 +65,10 @@ func Setup() error {
 
 	tx := db.Begin()
 
-	if err := tx.AutoMigrate(schemas...); err != nil {
-		tx.Rollback()
-		return fmt.Errorf("failed to connect database: %v", err)
-	}
+	// if err := tx.AutoMigrate(schemas...); err != nil {
+	// 	tx.Rollback()
+	// 	return fmt.Errorf("failed to connect database: %v", err)
+	// }
 
 	return tx.Commit().Error
 }
-
