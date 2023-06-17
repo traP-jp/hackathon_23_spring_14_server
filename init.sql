@@ -10,9 +10,9 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `time_cards` (
-  `id` varchar(32) NOT NULL,
-  `date` date NOT NULL,
-  `itemID` varchar(86) DEFAULT NULL
+  `id` varchar(32),
+  `date` date,
+  `item_id` varchar(86) NOT NULL,
   PRIMARY KEY (`id`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -33,7 +33,7 @@ VALUES
 UNLOCK TABLES;
 
 LOCK TABLES `time_cards` WRITE;
-INSERT INTO `time_cards` (`id`, `date`, `itemID`)
+INSERT INTO `time_cards` (`id`, `date`, `item_id`)
 VALUES
   ('traP', '2023-06-17','Get');
 /*!40000 ALTER TABLE `time_cards` DISABLE KEYS */;
