@@ -262,14 +262,14 @@ components:
     UserPublic:
       type: object
       properties:
-        id:
+        uuid:
           type: string
           format: uuid4
           example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
         uid:
           type: string
           example: lolico
-        schema:
+        dataset:
           type: array
           items:
             type: object
@@ -282,7 +282,7 @@ components:
                 example: "2019-04-01"
             
       required:
-        - id 
+        - uuid 
         - uid
         
     Item:

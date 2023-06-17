@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	mid "github.com/labstack/echo/v4/middleware"
+	"github.com/traP-jp/hackathon_23_spring_14_server/handler"
 	"github.com/traP-jp/hackathon_23_spring_14_server/model"
 )
 
@@ -26,6 +27,11 @@ func main() {
 		api.Any("", func(c echo.Context) error {
 			return c.Redirect(http.StatusFound, c.Path()+"/")
 		})
+
+		apiUser := api.Group("/user")
+		{
+			apiUser.GET("", handler.GetUsers)
+		}
 	}
 
 	port := os.Getenv("PORT")
