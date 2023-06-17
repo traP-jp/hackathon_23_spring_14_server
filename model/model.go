@@ -66,14 +66,10 @@ func Setup() error {
 
 	tx := db.Begin()
 
-	// if err := tx.AutoMigrate(schemas...); err != nil {
-	// 	tx.Rollback()
-	// 	return fmt.Errorf("failed to connect database: %v", err)
-	// }
+	if err := tx.AutoMigrate(schemas...); err != nil {
+		tx.Rollback()
+		return fmt.Errorf("failed to connect database: %v", err)
+	}
 
-	// var items []TimeCards
-	// db.First(&items)
-
-	// fmt.Println(items)
 	return tx.Commit().Error
 }
