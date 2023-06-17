@@ -41,3 +41,12 @@ func GetUserSpecific(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, rawUsers)
 }
+
+func GetRanking(c echo.Context) error {
+	rawUsers, err := model.GetRanking()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, rawUsers)
+}

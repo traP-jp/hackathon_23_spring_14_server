@@ -45,6 +45,11 @@ type ID struct {
 	UUID uuid.UUID `json:"uuid"`
 	ID   string    `json:"id"`
 }
+type Ranking struct {
+	UUID  uuid.UUID `json:"uuid" gorm:"primary_key;type:char(36)"`
+	ID    string    `json:"id" gorm:"size:32;unique"`
+	Score int       `json:"score" validate:"omitempty"`
+}
 
 func GetUsers() ([]*PublicUser, error) {
 	ids := []*ID{}
@@ -70,6 +75,18 @@ func GetUsers() ([]*PublicUser, error) {
 	}
 
 	return users, tx.Commit().Error
+}
+
+func GetRanking() ([]*Ranking, error) {
+	ranks := []*Ranking{}
+
+	tx := db.Begin()
+	if err := db.Raw("SELECT `uuid`,`id`,sum(point) FROM `users` GROUP BY `uuid` ORDER BY `point` DESC").Scan(&ranks).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	return ranks, tx.Commit().Error
 }
 
 func GetMe() ([]*UserDetail, error) {
