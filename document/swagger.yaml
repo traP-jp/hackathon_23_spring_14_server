@@ -2,7 +2,7 @@ openapi: 3.0.3
 
 info:
   title: hackathon23 API
-  version: v1
+  version: v2
 
 servers:
   - url: /api
@@ -124,7 +124,7 @@ paths:
         - item
       parameters:
         - $ref: "#/components/parameters/score"
-      description:
+      description: |
         項目を追加
       responses:
         200:
@@ -134,7 +134,22 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Item"
-                
+  /item/report:
+    get:
+      tags:
+        - item
+      parameters: 
+        - $ref: "#/components/parameters/item"
+      description: |
+        項目を報告
+      responses:
+        200:
+          description: |
+            報告した項目の内容
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
 components:
   parameters:
 
@@ -157,6 +172,14 @@ components:
       required: true
       description: |
         ユーザーID
+      schema:
+        type: string
+    item:
+      name: item
+      in: query
+      required: true
+      description: |
+        アイテムID
       schema:
         type: string
 
@@ -212,6 +235,7 @@ components:
                 items:
                   $ref: "#/components/schemas/Item"
       required:
+        - id 
         - uid
         - score
         - date
@@ -229,6 +253,7 @@ components:
         score:
           type: integer 
       required:
+        - id 
         - uid
         - score
         
@@ -248,5 +273,6 @@ components:
         score:
           type: integer
       required:
+        - id
         - title
         - score
