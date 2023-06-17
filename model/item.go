@@ -24,8 +24,7 @@ type PublicItem struct {
 func GetItems() ([]*Item, error) {
 	var items []*Item
 
-	if err := db.Find(&items).Error; err != nil {
-
+	if err := db.Raw("SELECT * FROM `items`").Scan(&items).Error; err != nil {
 		return nil, err
 	}
 
@@ -33,14 +32,14 @@ func GetItems() ([]*Item, error) {
 }
 func GetActiveItems() ([]*Item, error) {
 	var items []*Item
-	if err := db.Where("report <= ?", 2).Find(&items).Error; err != nil {
+	if err := db.Raw("SELECT * FROM `items` WHERE report <= 2").Scan(&items).Error; err != nil {
 		return nil, err
 	}
 	return items, nil
 }
 func EnsureExisistenceID(id string) ([]*Item, error) {
 	item := []*Item{}
-	if err := db.Where("id = ?", id).Find(&item).Error; err != nil {
+	if err := db.Raw("SELECT * FROM `items` WHERE id = ?", id).Scan(&item).Error; err != nil {
 		return nil, err
 	}
 	fmt.Println(item)
@@ -60,7 +59,7 @@ func AddItems(rawitem PublicItem) (*Item, error) {
 		Report:      rawitem.Report,
 	}
 
-	err = db.Create(&item).Error
+	err = db.Table("items").Create(&item).Error
 	if err != nil {
 
 		return nil, err

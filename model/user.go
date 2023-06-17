@@ -39,14 +39,14 @@ func GetUsers() ([]*PublicUser, error) {
 	users := []*PublicUser{}
 
 	tx := db.Begin()
-	if err := db.Model(&User{}).Select("uuid", "id").Group("uuid").Find(&ids).Error; err != nil {
+	if err := db.Raw("SELECT `uuid`,`id` FROM `users` GROUP BY `uuid`").Scan(&ids).Error; err != nil {
 		tx.Rollback()
 		return nil, err
 	}
 
 	for _, id := range ids {
 		data := []*DataSet{}
-		if err := db.Model(&User{}).Select("point", "date").Where("uuid = ?", id.UUID).Find(&data).Error; err != nil {
+		if err := db.Raw("SELECT point,date FROM `users` WHERE uuid = ? GROUP BY `uuid`", id.UUID).Scan(&data).Error; err != nil {
 			tx.Rollback()
 			return nil, err
 		}
