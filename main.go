@@ -70,8 +70,17 @@ func main() {
 	e := echo.New()
 	e.Use(mid.Logger())
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello World")
+		return c.String(http.StatusOK, "Hello World!")
 	})
+	api := e.Group("/api")
+	{
+
+		api.File("/swagger.yaml", "./document/swagger.yaml")
+		api.Static("/", "./document/swagger-ui/dist")
+		api.Any("", func(c echo.Context) error {
+			return c.Redirect(http.StatusFound, c.Path()+"/")
+		})
+	}
 	Setup()
 
 	port := os.Getenv("PORT")

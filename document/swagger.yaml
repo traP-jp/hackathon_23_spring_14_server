@@ -1,0 +1,252 @@
+openapi: 3.0.3
+
+info:
+  title: hackathon23 API
+  version: v1
+
+servers:
+  - url: /api
+
+paths:
+  /login:
+    post:
+      description: |
+        ログインを行います。
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        204:
+          description: |
+            ログインに成功しました。
+        200:
+          description: |
+            ログインに成功しました。
+      operationId: postLogin
+
+  /user:
+    get:
+      tags:
+        - user
+      description: |
+        全ユーザーを取得します。
+      responses:
+        200:
+          description: |
+            ユーザーの一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserPublic"
+      operationId: getUsers
+  /user/me:
+    get:
+      tags:
+        - user
+      description: |
+        ユーザの日ごとの合計点を取得します
+      responses:
+        200:
+          description: |
+            ユーザーの合計点とuid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+      operationId: getMe
+  /user/{uid}:
+   get:
+    tags:
+      - user
+    parameters:
+        - $ref: "#/components/parameters/uid"
+    description: |
+      ユーザの日ごとの合計点を取得します
+    responses:
+      200:
+        description: |
+          ユーザーの合計点とuid
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+    operationId: getUser
+    
+  /user/ranking:
+    get: 
+      tags:
+        - user
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: number
+      responses:
+        200:
+          description: |
+            ユーザーの一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserPublic"
+         
+  /item:
+    get:
+      tags:
+        - item
+      parameters:
+        - schema:
+            type: boolean
+            default: true
+          in: query
+          name: include-suspended
+          description: 無効にされたアイテムも必要か
+      description: |
+        全項目の一覧を取得します
+      responses:
+        200:
+          description: |
+            項目の一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: "#/components/schemas/Item"
+    post:
+      tags:
+        - item
+      parameters:
+        - $ref: "#/components/parameters/score"
+      description:
+        項目を追加
+      responses:
+        200:
+          description: |
+            追加する項目の内容
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+                
+components:
+  parameters:
+
+    score:
+      name: score
+      in: query
+      required: true
+      description: |
+        点数
+      schema:
+        type: string
+        enum:
+          - great
+          - good
+          - bad
+          - terrible
+    uid:
+      name: uid
+      in: path
+      required: true
+      description: |
+        ユーザーID
+      schema:
+        type: string
+
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        user:
+          type: string
+          example: lolico
+        password:
+          type: string
+          example: "********"
+        statusOnly:
+          type: string
+          example: "true"
+          description: |
+            空文字列 ('') またはundefinedの場合: レスポンス形式が text/html で、ログイン成功時は204を返す
+            
+            それ以外の場合: レスポンス形式が text/plain 形式で、ログイン成功時は200を返す
+        status_only:
+          type: string
+          example: "true"
+          description: |
+            deprecated (statusOnlyを使ってください)
+      required:
+        - user
+        - password
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid4
+          example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
+        uid:
+          type: string
+          example: lolico
+        list: 
+          type: array
+          items:
+            type: object
+            properties:
+              score:
+                type: integer
+              date:
+                type: string
+                format: date
+                example: "2019-04-01"
+              itemList:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+      required:
+        - uid
+        - score
+        - date
+
+    UserPublic:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid4
+          example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
+        uid:
+          type: string
+          example: lolico
+        score:
+          type: integer 
+      required:
+        - uid
+        - score
+        
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid4
+          example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
+        title:
+          type: string
+          example: title
+        description:
+          type: string
+          example: description
+        score:
+          type: integer
+      required:
+        - title
+        - score
