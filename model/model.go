@@ -73,3 +73,4 @@ func Setup() error {
 
 	return tx.Commit().Error
 }
+
