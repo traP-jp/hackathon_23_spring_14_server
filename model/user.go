@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
 	ID    string    `json:"id" gorm:"size:32;primary_key"`
