@@ -8,7 +8,6 @@ import (
 	mid "github.com/labstack/echo/v4/middleware"
 	"github.com/traP-jp/hackathon_23_spring_14_server/handler"
 	"github.com/traP-jp/hackathon_23_spring_14_server/model"
-	"github.com/traP-jp/hackathon_23_spring_14_server/handler"
 )
 
 func main() {
