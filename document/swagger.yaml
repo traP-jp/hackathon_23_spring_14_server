@@ -2,7 +2,7 @@ openapi: 3.0.3
 
 info:
   title: hackathon23 API
-  version: v2.1
+  version: v2.2
 
 servers:
   - url: /api
@@ -269,12 +269,21 @@ components:
         uid:
           type: string
           example: lolico
-        score:
-          type: integer 
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              score:
+                type: integer
+              date:
+                type: string
+                format: date
+                example: "2019-04-01"
+            
       required:
         - id 
         - uid
-        - score
         
     Item:
       type: object
