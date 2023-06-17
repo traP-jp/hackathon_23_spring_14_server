@@ -31,3 +31,13 @@ func GetMe(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, rawUsers)
 }
+
+func GetUserSpecific(c echo.Context) error {
+	uid := c.Param("uid")
+	rawUsers, err := model.GetUserSpecific(uid)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, rawUsers)
+}

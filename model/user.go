@@ -119,3 +119,51 @@ func GetMe() ([]*UserDetail, error) {
 
 	return users, tx.Commit().Error
 }
+
+func GetUserSpecific(uid string) ([]*UserDetail, error) {
+	ids := []*ID{}
+	users := []*UserDetail{}
+
+	tx := db.Begin()
+	if err := db.Raw("SELECT `uuid`,`id` FROM `users` GROUP BY `uuid` HAVING id = ?", uid).Scan(&ids).Error; err != nil {
+
+		return nil, err
+	}
+
+	for _, id := range ids {
+		data := []*DataSet{}
+		dataDetail := []*DataSetDetail{}
+		if err := db.Raw("SELECT point,date FROM `users` WHERE uuid = ? GROUP BY `uuid`", id.UUID).Scan(&data).Error; err != nil {
+
+			return nil, err
+		}
+		for _, d := range data {
+			timeCards := []*TimeCards{}
+			itemList := []*Item{}
+			if err := db.Raw("SELECT * FROM `time_cards` WHERE id = ? AND date = ?", id.UUID, d.Date).Scan(&timeCards).Error; err != nil {
+
+				return nil, err
+			}
+			for _, t := range timeCards {
+				item := &Item{}
+				if err := db.Raw("SELECT * FROM `items` WHERE uuid = ?", t.ItemID).Scan(&item).Error; err != nil {
+
+					return nil, err
+				}
+				itemList = append(itemList, item)
+			}
+			dataDetail = append(dataDetail, &DataSetDetail{
+				Score:    d.Point,
+				Date:     d.Date,
+				ItemList: itemList,
+			})
+		}
+		users = append(users, &UserDetail{
+			UUID:    id.UUID,
+			ID:      id.ID,
+			DataSet: dataDetail,
+		})
+	}
+
+	return users, tx.Commit().Error
+}
