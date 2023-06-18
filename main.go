@@ -69,7 +69,7 @@ func main() {
 		{
 			apiItem.GET("", handler.GetItems)
 			apiItem.POST("", handler.AddItems)
-			apiItem.GET("/report", handler.ReportItem)
+			apiItem.PUT("/report", handler.ReportItem)
 		}
 	}
 

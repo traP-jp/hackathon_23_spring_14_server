@@ -59,25 +59,25 @@ paths:
                 $ref: "#/components/schemas/User"
       operationId: getMe
   /user/{uid}:
-   get:
-    tags:
-      - user
-    parameters:
+    get:
+      tags:
+        - user
+      parameters:
         - $ref: "#/components/parameters/uid"
-    description: |
-      ユーザの日ごとの合計点を取得します
-    responses:
-      200:
-        description: |
-          ユーザーの合計点とuid
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-    operationId: getUser
-    
+      description: |
+        ユーザの日ごとの合計点を取得します
+      responses:
+        200:
+          description: |
+            ユーザーの合計点とuid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+      operationId: getUser
+
   /user/ranking:
-    get: 
+    get:
       tags:
         - user
       parameters:
@@ -95,7 +95,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Ranking"
-         
+
   /item:
     get:
       tags:
@@ -117,7 +117,7 @@ paths:
             application/json:
               schema:
                 type: array
-                items: 
+                items:
                   $ref: "#/components/schemas/Item"
     post:
       tags:
@@ -138,10 +138,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Item"
   /item/report:
-    get:
+    put:
       tags:
         - item
-      parameters: 
+      parameters:
         - $ref: "#/components/parameters/item"
       description: |
         項目を報告
@@ -155,7 +155,6 @@ paths:
                 $ref: "#/components/schemas/Item"
 components:
   parameters:
-
     score:
       name: score
       in: query
@@ -182,15 +181,14 @@ components:
       in: query
       required: true
       description: |
-        アイテムID
+        アイテムUUID
       schema:
         type: string
     title:
       name: title
       in: query
       required: true
-      description:
-        タイトル
+      description: タイトル
       schema:
         type: string
     description:
@@ -217,7 +215,7 @@ components:
           example: "true"
           description: |
             空文字列 ('') またはundefinedの場合: レスポンス形式が text/html で、ログイン成功時は204を返す
-            
+
             それ以外の場合: レスポンス形式が text/plain 形式で、ログイン成功時は200を返す
         status_only:
           type: string
@@ -238,7 +236,7 @@ components:
         id:
           type: string
           example: lolico
-        dataset: 
+        dataset:
           type: array
           items:
             type: object
@@ -254,7 +252,7 @@ components:
                 items:
                   $ref: "#/components/schemas/Item"
       required:
-        - uuid 
+        - uuid
         - id
         - score
         - date
@@ -280,11 +278,11 @@ components:
                 type: string
                 format: date
                 example: "2019-04-01T00:00:00Z"
-            
+
       required:
-        - uuid 
+        - uuid
         - uid
-        
+
     Item:
       type: object
       properties:
@@ -306,7 +304,7 @@ components:
         - uuid
         - id
         - point
-    
+
     Ranking:
       type: object
       properties:
