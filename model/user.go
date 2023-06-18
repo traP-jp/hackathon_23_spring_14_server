@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -19,9 +20,9 @@ type DataSet struct {
 }
 
 type DataSetDetail struct {
-	Score    int       `json:"score"`
-	Date     time.Time `json:"date"`
-	ItemList []*Item   `json:"itemList"`
+	Score    int     `json:"score"`
+	Date     string  `json:"date"`
+	ItemList []*Item `json:"itemList"`
 }
 
 type PublicUser struct {
@@ -115,7 +116,7 @@ func GetMe() (*UserDetail, error) {
 		}
 		dataDetail = append(dataDetail, &DataSetDetail{
 			Score:    d.Point,
-			Date:     d.Date,
+			Date:     d.Date.Format("2006-01-02"),
 			ItemList: itemList,
 		})
 	}
@@ -158,9 +159,10 @@ func GetUserSpecific(uid string) (*UserDetail, error) {
 			}
 			itemList = append(itemList, item)
 		}
+		fmt.Println("date:",d.Date)
 		dataDetail = append(dataDetail, &DataSetDetail{
 			Score:    d.Point,
-			Date:     d.Date,
+			Date:     d.Date.Format("2006-01-02"),
 			ItemList: itemList,
 		})
 	}
