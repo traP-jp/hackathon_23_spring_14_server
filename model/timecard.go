@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -9,7 +10,7 @@ import (
 type TimeCards struct {
 	ID     uuid.UUID `json:"uuid" gorm:"primary_key;type:char(36)"`
 	Date   time.Time `json:"date" gorm:"primary_key"`
-	ItemID uuid.UUID `json:"uuid" gorm:"primary_key;type:char(36)"`
+	ItemID uuid.UUID `json:"Itemid" gorm:"primary_key;type:char(36)"`
 }
 
 func AddTimeCards(rawID string, rawtuid string, userid string) (*TimeCards, error) {
@@ -28,6 +29,7 @@ func AddTimeCards(rawID string, rawtuid string, userid string) (*TimeCards, erro
 		if err := db.Exec("INSERT INTO `users` (`uuid`,`id`,`point`,`date`) VALUES (?,?,?,?)", rawID, userid, item.Point, time.Now()).Error; err != nil {
 			return nil, err
 		}
+		user.UUID, _ = uuid.FromString(rawID)
 
 	} else {
 
@@ -36,7 +38,13 @@ func AddTimeCards(rawID string, rawtuid string, userid string) (*TimeCards, erro
 			return nil, err
 		}
 	}
-	card := &TimeCards{}
 
+	card := &TimeCards{
+		ID:     user.UUID,
+		Date:   time.Now(),
+		ItemID: item.UUID,
+	}
+	fmt.Println(card.ID)
+	fmt.Println(card.ItemID)
 	return card, nil
 }
