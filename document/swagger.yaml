@@ -88,13 +88,13 @@ paths:
       responses:
         200:
           description: |
-            ユーザーの一覧
+            各ユーザーの合計点一覧
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/UserPublic"
+                  $ref: "#/components/schemas/Ranking"
          
   /item:
     get:
@@ -231,14 +231,14 @@ components:
     User:
       type: object
       properties:
-        id:
+        uuid:
           type: string
           format: uuid4
           example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
-        uid:
+        id:
           type: string
           example: lolico
-        list: 
+        dataset: 
           type: array
           items:
             type: object
@@ -248,14 +248,14 @@ components:
               date:
                 type: string
                 format: date
-                example: "2019-04-01"
+                example: "2019-04-01T00:00:00Z"
               itemList:
                 type: array
                 items:
                   $ref: "#/components/schemas/Item"
       required:
-        - id 
-        - uid
+        - uuid 
+        - id
         - score
         - date
 
@@ -266,7 +266,7 @@ components:
           type: string
           format: uuid4
           example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
-        uid:
+        id:
           type: string
           example: lolico
         dataset:
@@ -274,12 +274,12 @@ components:
           items:
             type: object
             properties:
-              score:
+              point:
                 type: integer
               date:
                 type: string
                 format: date
-                example: "2019-04-01"
+                example: "2019-04-01T00:00:00Z"
             
       required:
         - uuid 
@@ -288,19 +288,38 @@ components:
     Item:
       type: object
       properties:
-        id:
+        uuid:
           type: string
           format: uuid4
           example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
-        title:
+        id:
           type: string
           example: title
         description:
           type: string
           example: description
+        point:
+          type: integer
+        report:
+          type: integer
+      required:
+        - uuid
+        - id
+        - point
+    
+    Ranking:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid4
+          example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
+        id:
+          type: string
+          example: lolico
         score:
           type: integer
       required:
+        - uuid
         - id
-        - title
         - score
