@@ -70,6 +70,11 @@ func main() {
 			apiItem.GET("", handler.GetItems)
 			apiItem.POST("", handler.AddItems)
 			apiItem.GET("/report", handler.ReportItem)
+
+		}
+		apiItemCard := api.Group("/timecard")
+		{
+			apiItemCard.POST("", handler.AddTimeCards)
 		}
 	}
 

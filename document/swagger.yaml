@@ -59,25 +59,25 @@ paths:
                 $ref: "#/components/schemas/User"
       operationId: getMe
   /user/{uid}:
-   get:
-    tags:
-      - user
-    parameters:
+    get:
+      tags:
+        - user
+      parameters:
         - $ref: "#/components/parameters/uid"
-    description: |
-      ユーザの日ごとの合計点を取得します
-    responses:
-      200:
-        description: |
-          ユーザーの合計点とuid
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-    operationId: getUser
-    
+      description: |
+        ユーザの日ごとの合計点を取得します
+      responses:
+        200:
+          description: |
+            ユーザーの合計点とuid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+      operationId: getUser
+
   /user/ranking:
-    get: 
+    get:
       tags:
         - user
       parameters:
@@ -95,7 +95,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/UserPublic"
-         
+
   /item:
     get:
       tags:
@@ -117,7 +117,7 @@ paths:
             application/json:
               schema:
                 type: array
-                items: 
+                items:
                   $ref: "#/components/schemas/Item"
     post:
       tags:
@@ -141,7 +141,7 @@ paths:
     get:
       tags:
         - item
-      parameters: 
+      parameters:
         - $ref: "#/components/parameters/item"
       description: |
         項目を報告
@@ -154,10 +154,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/Item"
 
-  /timeCard:
+  /timecard:
     post:
-      tags: 
-        - timeCard
+      tags:
+        - timecard
       parameters:
         - $ref: "#/components/parameters/uuid"
         - $ref: "#/components/parameters/tuid"
@@ -171,10 +171,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TimeCard"
-    
-  /timeCard/delete:
+
+  /timecard/delete:
     post:
-      tags: 
+      tags:
         - timeCard
       parameters:
         - $ref: "#/components/parameters/uuid"
@@ -189,10 +189,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TimeCard"
-      
+
 components:
   parameters:
-
     score:
       name: score
       in: query
@@ -208,18 +207,18 @@ components:
           - terrible
     uuid:
       name: uuid
-      in: path
+      in: query
       required: true
       description: |
-        ユーザーのUID
+        ユーザーのuUID
       schema:
         type: string
     tuid:
       name: tuid
-      in: path
+      in: query
       required: true
       description: |
-        タイトルのUID
+        タイトルのuUID
       schema:
         type: string
     uid:
@@ -242,8 +241,7 @@ components:
       name: title
       in: query
       required: true
-      description:
-        タイトル
+      description: タイトル
       schema:
         type: string
     description:
@@ -254,7 +252,6 @@ components:
         説明
       schema:
         type: string
-    
 
   schemas:
     LoginRequest:
@@ -271,7 +268,7 @@ components:
           example: "true"
           description: |
             空文字列 ('') またはundefinedの場合: レスポンス形式が text/html で、ログイン成功時は204を返す
-            
+
             それ以外の場合: レスポンス形式が text/plain 形式で、ログイン成功時は200を返す
         status_only:
           type: string
@@ -292,7 +289,7 @@ components:
         uid:
           type: string
           example: lolico
-        list: 
+        list:
           type: array
           items:
             type: object
@@ -308,7 +305,7 @@ components:
                 items:
                   $ref: "#/components/schemas/Item"
       required:
-        - id 
+        - id
         - uid
         - score
         - date
@@ -334,11 +331,11 @@ components:
                 type: string
                 format: date
                 example: "2019-04-01"
-            
+
       required:
-        - uuid 
+        - uuid
         - uid
-        
+
     Item:
       type: object
       properties:
@@ -362,7 +359,7 @@ components:
     TimeCard:
       type: object
       properties:
-        uuid: 
+        uuid:
           type: string
           format: uuid4
           example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"

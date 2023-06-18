@@ -13,12 +13,6 @@ type User struct {
 	Date  time.Time `json:"date" gorm:"primary_key"`
 }
 
-type TimeCards struct {
-	ID     uuid.UUID `json:"uuid" gorm:"primary_key;type:char(36)"`
-	Date   time.Time `json:"date" gorm:"primary_key"`
-	ItemID uuid.UUID `json:"uuid" gorm:"primary_key;type:char(36)"`
-}
-
 type DataSet struct {
 	Point int       `json:"point"`
 	Date  time.Time `json:"date"`
