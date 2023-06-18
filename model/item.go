@@ -59,7 +59,7 @@ func AddItems(rawitem PublicItem) (*Item, error) {
 		Report:      rawitem.Report,
 	}
 
-	err = db.Table("items").Create(&item).Error
+	err = db.Exec("INSERT INTO `items` (`uuid`,`id`,`description`,`point`,`report`) VALUES (?,?,?,?,?)", item.UUID, item.ID, item.Description, item.Point, item.Report).Error
 	if err != nil {
 
 		return nil, err
@@ -69,7 +69,7 @@ func AddItems(rawitem PublicItem) (*Item, error) {
 
 func ReportItem(id string) (*Item, error) {
 	item := Item{}
-	if err := db.Exec("SELECT * FROM `items` WHERE id = ?", id).Scan(&item).Error; err != nil {
+	if err := db.Raw("SELECT * FROM `items` WHERE uuid = ?", id).Scan(&item).Error; err != nil {
 		return nil, err
 	}
 	item.Report += 1

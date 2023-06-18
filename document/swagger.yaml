@@ -88,13 +88,13 @@ paths:
       responses:
         200:
           description: |
-            ユーザーの一覧
+            各ユーザーの合計点一覧
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/UserPublic"
+                  $ref: "#/components/schemas/Ranking"
 
   /item:
     get:
@@ -138,7 +138,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Item"
   /item/report:
-    get:
+    put:
       tags:
         - item
       parameters:
@@ -234,7 +234,7 @@ components:
       in: query
       required: true
       description: |
-        アイテムID
+        アイテムUUID
       schema:
         type: string
     title:
@@ -282,42 +282,11 @@ components:
     User:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid4
-          example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
-        uid:
-          type: string
-          example: lolico
-        list:
-          type: array
-          items:
-            type: object
-            properties:
-              score:
-                type: integer
-              date:
-                type: string
-                format: date
-                example: "2019-04-01"
-              itemList:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Item"
-      required:
-        - id
-        - uid
-        - score
-        - date
-
-    UserPublic:
-      type: object
-      properties:
         uuid:
           type: string
           format: uuid4
           example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
-        uid:
+        id:
           type: string
           example: lolico
         dataset:
@@ -330,33 +299,18 @@ components:
               date:
                 type: string
                 format: date
-                example: "2019-04-01"
-
+                example: "2019-04-01T00:00:00Z"
+              itemList:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
       required:
         - uuid
-        - uid
-
-    Item:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid4
-          example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
-        title:
-          type: string
-          example: title
-        description:
-          type: string
-          example: description
-        score:
-          type: integer
-      required:
         - id
-        - title
         - score
+        - date
 
-    TimeCard:
+    UserPublic:
       type: object
       properties:
         uuid:
@@ -366,13 +320,57 @@ components:
         id:
           type: string
           example: lolico
-        title:
+        dataset:
+          type: array
+          items:
+            type: object
+            properties:
+              point:
+                type: integer
+              date:
+                type: string
+                format: date
+                example: "2019-04-01T00:00:00Z"
+
+      required:
+        - uuid
+        - uid
+
+    Item:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid4
+          example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
+        id:
           type: string
           example: title
-        date:
+        description:
           type: string
-          format: date
-          example: "2019-04-01T00:00:00Z"
+          example: description
+        point:
+          type: integer
+        report:
+          type: integer
       required:
         - uuid
         - id
+        - point
+
+    Ranking:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid4
+          example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
+        id:
+          type: string
+          example: lolico
+        score:
+          type: integer
+      required:
+        - uuid
+        - id
+        - score

@@ -70,8 +70,8 @@ func main() {
 			apiItem.GET("", handler.GetItems)
 			apiItem.POST("", handler.AddItems)
 			apiItem.GET("/report", handler.ReportItem)
-
 		}
+
 		apiItemCard := api.Group("/timecard")
 		{
 			apiItemCard.POST("", handler.AddTimeCards)
@@ -157,10 +157,19 @@ func ensureLoggedIn(next echo.HandlerFunc) echo.HandlerFunc {
 			return internalServerError(c, err)
 		}
 
-		ok := sess.Values[tokenKey].(*oauth2.Token).Valid()
+		token, ok := sess.Values[tokenKey].(*oauth2.Token)
 		if !ok {
 			return echo.NewHTTPError(http.StatusUnauthorized, "unauthorized")
 		}
+
+		traqconf := traq.NewConfiguration()
+		traqconf.HTTPClient = conf.Client(c.Request().Context(), token)
+		client := traq.NewAPIClient(traqconf)
+		c.Set("client", client)
+		user, _, err := client.MeApi.GetMe(c.Request().Context()).Execute()
+		c.Set("uuid", user.Id)
+		c.Set("userid", user.Name)
+
 		return next(c)
 	}
 }
