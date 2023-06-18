@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -16,6 +17,7 @@ type (
 )
 
 func GetUsers(c echo.Context) error {
+
 	rawUsers, err := model.GetUsers()
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
@@ -24,7 +26,9 @@ func GetUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, rawUsers)
 }
 func GetMe(c echo.Context) error {
-	rawUsers, err := model.GetMe()
+	id := c.Get("userid").(string)
+	fmt.Println(id)
+	rawUsers, err := model.GetUserSpecific(id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
