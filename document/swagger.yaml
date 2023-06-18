@@ -267,6 +267,7 @@ components:
           format: uuid4
           example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
         id:
+        id:
           type: string
           example: lolico
         dataset:
@@ -275,10 +276,12 @@ components:
             type: object
             properties:
               point:
+              point:
                 type: integer
               date:
                 type: string
                 format: date
+                example: "2019-04-01T00:00:00Z"
                 example: "2019-04-01T00:00:00Z"
             
       required:
