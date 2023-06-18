@@ -16,10 +16,37 @@ type (
 )
 
 func GetUsers(c echo.Context) error {
-	users, err := model.GetUsers()
+	rawUsers, err := model.GetUsers()
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, users)
+	return c.JSON(http.StatusOK, rawUsers)
+}
+func GetMe(c echo.Context) error {
+	rawUsers, err := model.GetMe()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, rawUsers)
+}
+
+func GetUserSpecific(c echo.Context) error {
+	uid := c.Param("uid")
+	rawUsers, err := model.GetUserSpecific(uid)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, rawUsers)
+}
+
+func GetRanking(c echo.Context) error {
+	rawUsers, err := model.GetRanking()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, rawUsers)
 }

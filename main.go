@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 	mid "github.com/labstack/echo/v4/middleware"
 	traqoauth2 "github.com/ras0q/traq-oauth2"
+	"github.com/traP-jp/hackathon_23_spring_14_server/handler"
 	"github.com/traP-jp/hackathon_23_spring_14_server/model"
 	"github.com/traPtitech/go-traq"
 	"golang.org/x/oauth2"
@@ -56,6 +57,20 @@ func main() {
 		api.Any("", func(c echo.Context) error {
 			return c.Redirect(http.StatusFound, c.Path()+"/")
 		})
+
+		apiUser := api.Group("/user")
+		{
+			apiUser.GET("", handler.GetUsers)
+			apiUser.GET("/me", handler.GetMe)
+			apiUser.GET("/:uid", handler.GetUserSpecific)
+			apiUser.GET("/ranking", handler.GetRanking)
+		}
+		apiItem := api.Group("/item")
+		{
+			apiItem.GET("", handler.GetItems)
+			apiItem.POST("", handler.AddItems)
+			apiItem.GET("/report", handler.ReportItem)
+		}
 	}
 
 	port := os.Getenv("PORT")
