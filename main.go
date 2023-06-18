@@ -69,7 +69,12 @@ func main() {
 		{
 			apiItem.GET("", handler.GetItems)
 			apiItem.POST("", handler.AddItems)
-			apiItem.PUT("/report", handler.ReportItem)
+			apiItem.GET("/report", handler.ReportItem)
+		}
+
+		apiItemCard := api.Group("/timecard")
+		{
+			apiItemCard.POST("", handler.AddTimeCards)
 		}
 	}
 

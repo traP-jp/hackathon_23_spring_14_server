@@ -8,15 +8,9 @@ import (
 
 type User struct {
 	UUID  uuid.UUID `json:"uuid" gorm:"primary_key;type:char(36)"`
-	ID    string    `json:"id" gorm:"size:32;unique"`
+	ID    string    `json:"id" gorm:"size:32"`
 	Point int       `json:"point" validate:"omitempty"`
 	Date  time.Time `json:"date" gorm:"primary_key"`
-}
-
-type TimeCards struct {
-	ID     uuid.UUID `json:"uuid" gorm:"primary_key;type:char(36)"`
-	Date   time.Time `json:"date" gorm:"primary_key"`
-	ItemID uuid.UUID `json:"uuid" gorm:"primary_key;type:char(36)"`
 }
 
 type DataSet struct {
