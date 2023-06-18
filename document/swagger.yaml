@@ -374,3 +374,21 @@ components:
         - uuid
         - id
         - score
+    TimeCard:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid4
+          example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
+        date:
+          type: string
+          format: date
+          example: "2019-04-01T00:00:00Z"
+        Itemid:
+          type: string
+          format: uuid4
+          example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
+      required:
+        - uuid
+        - id
