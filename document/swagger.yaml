@@ -153,6 +153,43 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Item"
+
+  /timeCard:
+    post:
+      tags: 
+        - timeCard
+      parameters:
+        - $ref: "#/components/parameters/uuid"
+        - $ref: "#/components/parameters/tuid"
+      description: |
+        タイムカードの追加
+      responses:
+        200:
+          description: |
+            追加するタイムカードの内容
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeCard"
+    
+  /timeCard/delete:
+    post:
+      tags: 
+        - timeCard
+      parameters:
+        - $ref: "#/components/parameters/uuid"
+        - $ref: "#/components/parameters/tuid"
+      description: |
+        タイムカードの削除
+      responses:
+        200:
+          description: |
+            削除するするタイムカードの内容
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeCard"
+      
 components:
   parameters:
 
@@ -169,6 +206,22 @@ components:
           - good
           - bad
           - terrible
+    uuid:
+      name: uuid
+      in: path
+      required: true
+      description: |
+        ユーザーのUID
+      schema:
+        type: string
+    tuid:
+      name: tuid
+      in: path
+      required: true
+      description: |
+        タイトルのUID
+      schema:
+        type: string
     uid:
       name: uid
       in: path
@@ -201,6 +254,7 @@ components:
         説明
       schema:
         type: string
+    
 
   schemas:
     LoginRequest:
@@ -304,3 +358,24 @@ components:
         - id
         - title
         - score
+
+    TimeCard:
+      type: object
+      properties:
+        uuid: 
+          type: string
+          format: uuid4
+          example: "33a123f4-067b-4ec5-9060-4d03da4c4aca"
+        id:
+          type: string
+          example: lolico
+        title:
+          type: string
+          example: title
+        date:
+          type: string
+          format: date
+          example: "2019-04-01T00:00:00Z"
+      required:
+        - uuid
+        - id
