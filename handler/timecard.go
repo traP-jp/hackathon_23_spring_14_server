@@ -14,7 +14,7 @@ func AddTimeCards(c echo.Context) error {
 	rawtuid := c.QueryParam("tuid")
 	fmt.Println(rawuuid)
 	fmt.Println(rawtuid)
-	id := c.Get("id").(string)
-	model.AddTimeCards(rawuuid, rawtuid, id)
+	userid := c.Get("userid").(string)
+	model.AddTimeCards(rawuuid, rawtuid, userid)
 	return nil
 }

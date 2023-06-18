@@ -12,8 +12,8 @@ type TimeCards struct {
 	ItemID uuid.UUID `json:"uuid" gorm:"primary_key;type:char(36)"`
 }
 
-func AddTimeCards(rawID string, rawtuid string) (*TimeCards, error) {
-	if err := db.Exec("INSERT INTO `time_cards` (`id`,`date`,`item_id`) VALUES (?,?,?)", rawID, time.Now(), rawtuid).Error; err != nil {
+func AddTimeCards(rawID string, rawtuid string, userid string) (*TimeCards, error) {
+	if err := db.Exec("INSERT INTO `time_cards` (`id`,`date`,`item_id`) VALUES (?,?,?)", rawID, time.Now().Format(time.DateOnly), rawtuid).Error; err != nil {
 		return nil, err
 	}
 	item := Item{}
@@ -21,11 +21,11 @@ func AddTimeCards(rawID string, rawtuid string) (*TimeCards, error) {
 		return nil, err
 	}
 	user := User{}
-	if err := db.Raw("SELECT * FROM `users` WHERE uuid = ? AND date = ?", rawID, rawtuid).Scan(&user).Error; err != nil {
+	if err := db.Raw("SELECT * FROM `users` WHERE uuid = ? AND date = ?", rawID, time.Now().Format(time.DateOnly)).Scan(&user).Error; err != nil {
 		return nil, err
 	}
 	if user.UUID.IsNil() {
-		if err := db.Exec("INSERT INTO `users` (`uuid`,`id`,`point`,`date`) VALUES (?,?,?,?)", rawtuid, user.ID, item.Point, time.Now()).Error; err != nil {
+		if err := db.Exec("INSERT INTO `users` (`uuid`,`id`,`point`,`date`) VALUES (?,?,?,?)", rawID, userid, item.Point, time.Now()).Error; err != nil {
 			return nil, err
 		}
 
